@@ -1,0 +1,42 @@
+{
+    "admin": {
+        "id": 1,
+        "nome": "Administrador",
+        "email": "admin@example.com",
+        "senha": "",
+        "idade": 45,
+        "role": "admin"
+    },
+    "user1": {
+        "id": 2,
+        "nome": "Usuario 1",
+        "email": "user1@example.com",
+        "senha": "user123",
+        "idade": 30,
+        "role": "common"
+    },
+    "user2": {
+        "id": 3,
+        "nome": "Usuario 2",
+        "email": "user2@example.com",
+        "senha": "user456",
+        "idade": 25,
+        "role": "common"
+    },
+    "Usuario 3": {
+        "id": 4,
+        "nome": "Usuario 3",
+        "email": "",
+        "senha": "teste",
+        "idade": 15,
+        "role": "common"
+    },
+    "teste12": {
+        "id": 5,
+        "nome": "teste12",
+        "email": "teste13@email.com",
+        "senha": "123",
+        "idade": 0,
+        "role": "common"
+    }
+}
