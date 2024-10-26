@@ -2,5 +2,4 @@ opencv-python
 streamlit
 mediapipe
 opencv-python
-time
 numpy
