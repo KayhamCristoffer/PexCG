@@ -1,7 +1,8 @@
 streamlit-webcam-example
 streamlit==1.39.0
-opencv-python==4.5.5.64
 numpy
 opencv-python-headless
+opencv_contrib_python
+opencv-python==4.5.5.64
 mediapipe==0.10.15
 cvzone==1.5.6
