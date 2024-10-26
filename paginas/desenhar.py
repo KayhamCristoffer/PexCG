@@ -5,6 +5,18 @@ import time
 import os
 
 def show_desenho():
+        # Adicione essa linha para garantir que o pedido de permissão seja mostrado
+    components.html("""
+        <script>
+            navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                document.write('<h1 style="color:green">Câmera permitida!</h1>');
+            })
+            .catch((err) => {
+                document.write('<h1 style="color:red">Permissão de câmera negada.</h1>');
+            });
+        </script>
+    """)
     detector = HandDetector()
     cores = [(0, 0, 0), (255, 255, 255), (0, 0, 255), (0, 255, 0), (255, 0, 0)]
     cor_desenho_atual = (255, 0, 0)
