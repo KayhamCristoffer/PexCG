@@ -2,14 +2,14 @@ import streamlit as st
 import cv2
 from cvzone.HandTrackingModule import HandDetector
 import numpy as np
-import os
 import time
+import os
 
-def show_desenho():
+def show_desenho(img):
     detector = HandDetector()
     cores = [(0, 0, 0), (255, 255, 255), (0, 0, 255), (0, 255, 0), (255, 0, 0)]
     cor_desenho_atual = (255, 0, 0)
-
+    
     # Botões de cores
     botao_raio = 40
     espaco_entre_botoes = 20
@@ -27,20 +27,10 @@ def show_desenho():
     pontos_buffer = []
     desenhando = False
 
-    video_feed = st.empty()
-    
-    # Captura de imagem da câmera
-    img = st.camera_input("Capturar Imagem")
-
-    if img is not None:
-        # Converte a imagem para um formato que pode ser processado
-        img = cv2.imdecode(np.frombuffer(img.read(), np.uint8), cv2.IMREAD_COLOR)
-        img = cv2.flip(img, 1)
-
-        # Desenha a borda da câmera
-        altura, largura, _ = img.shape
+    while True:
+        # Usa a imagem capturada da câmera
         img_borda = cv2.copyMakeBorder(img, 20, 20, 20, 20, cv2.BORDER_CONSTANT, value=(255, 255, 255))
-        
+
         # Desenha botões
         for bx, by, cor in botoes:
             cv2.circle(img_borda, (bx + 20, by + 20), botao_raio, cor, cv2.FILLED)
@@ -109,6 +99,7 @@ def show_desenho():
                     pontos_atual.clear()
                     pontos_buffer.clear()
                     ultimo_tempo = tempo_atual
+
             if (botao_borracha[0] - botao_raio < x_mao < botao_borracha[0] + botao_raio) and \
                     (botao_borracha[1] - botao_raio < y_mao < botao_borracha[1] + botao_raio):
                 modo_borracha = not modo_borracha  # Alterna a borracha (ativa/desativa)
@@ -117,7 +108,8 @@ def show_desenho():
             x, y, cor = pontos
             cv2.circle(img_borda, (x, y), 5, cor, cv2.FILLED)
 
-        video_feed.image(cv2.cvtColor(img_borda, cv2.COLOR_BGR2RGB), channels="RGB")
+        st.image(cv2.cvtColor(img_borda, cv2.COLOR_BGR2RGB), channels="RGB")
+        time.sleep(0.1)  # Para dar uma leve pausa na atualização do frame
 
 def salvar_desenho(img, pontos_desenhos_anteriores, pontos_atual):
     # Verifica se o diretório 'galeria' existe, se não, cria
@@ -131,6 +123,32 @@ def salvar_desenho(img, pontos_desenhos_anteriores, pontos_atual):
     
     # Nome do arquivo com timestamp
     nome_arquivo = time.strftime("desenho_%Y%m%d_%H%M%S.png")
-    # Salva a imagem na pasta 'galeria'
-    cv2.imwrite(os.path.join("galeria", nome_arquivo), img)
+    
+    # Caminho completo para salvar a imagem na pasta 'galeria'
+    caminho_completo = os.path.join("galeria", nome_arquivo)
+    
+    # Salva a imagem
+    cv2.imwrite(caminho_completo, img)
+    
+    # Inicializa a lista saved_images se não existir
+    if "saved_images" not in st.session_state:  
+        st.session_state.saved_images = []  # Inicializa a lista se não existir
+    
+    # Adiciona o caminho à lista de imagens salvas
+    st.session_state.saved_images.append(caminho_completo)
+    
+    # Mensagem de sucesso
+    st.success(f"Desenho salvo: {nome_arquivo}")
 
+def desenhar_page():
+    st.title("Desenho com Gestos")
+    
+    # Captura de imagem com a câmera
+    camera_img = st.camera_input("Capture sua imagem")
+    
+    if camera_img is not None:
+        # Lê a imagem da câmera
+        img = cv2.imdecode(np.frombuffer(camera_img.read(), np.uint8), cv2.IMREAD_COLOR)
+        show_desenho(img)
+    else:
+        st.warning("Por favor, capture uma imagem para começar a desenhar.")
