@@ -23,7 +23,7 @@ def show_desenho():
     ultimo_tempo = time.time()
     
     video_feed = st.empty()
-    
+    st.camera_input(label, key=None, help=None, on_change=None, args=None, kwargs=None, *, disabled=False, label_visibility="visible")
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         st.error("Não foi possível acessar a câmera.")
